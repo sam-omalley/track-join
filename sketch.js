@@ -1,8 +1,16 @@
 // History point radius
-const hpRadius = 4;
-const headWidth = 7;
+const hpRadius = 10;
+const headWidth = 15;
 
 var slider;
+var mouseLastPressedX = 0;
+var mouseLastPressedY = 0;
+
+function isSliderPressed() {
+  return mouseIsPressed &&
+         abs(mouseLastPressedX - (width / 2)) <= 40 &&
+         abs(mouseLastPressedY - (height / 2)) <= 10;
+}
 
 class HistoryPoint {
   constructor(x, y, t) {
@@ -41,16 +49,30 @@ class Track {
   }
 
   draw() {
+    var points = new Array();
     stroke(this.colour);
     fill(this.colour);
     for (var idx = 0; idx < this.historyPoints.length; ++idx) {
       var hp = this.historyPoints[idx];
-      if (idx < this.historyPoints.length - 1 || mouseIsPressed) {
+
+      if (this.oldTrack && isSliderPressed() && hp.t > this.t) {
+        continue;
+      }
+
+      if (!this.oldTrack && isSliderPressed() && hp.t <= this.t) {
+        continue;
+      }
+
+      if (idx < this.historyPoints.length - 1 || (isSliderPressed() && this.oldTrack)) {
         hp.draw();
       } else {
         hp.drawHead();
       }
+
+      points.push(hp);
     }
+
+    return points;
   }
 }
 
@@ -63,28 +85,40 @@ function setup() {
 
   rectMode(CENTER);
 
-  slider = createSlider(0, 100, 50);
+  slider = createSlider(11, 99, 50);
   slider.position((width / 2) - 40, height / 2);
   slider.style('width', '80px');
 
 
-  track1 = new Track(color(0, 255, 255), true);
+  track1 = new Track(color("#d7191c"), true);
   track1.addPoint(new HistoryPoint(61, 226, 10));
   track1.addPoint(new HistoryPoint(106, 214, 20));
   track1.addPoint(new HistoryPoint(150, 232, 30));
   track1.addPoint(new HistoryPoint(220, 227, 40));
   track1.addPoint(new HistoryPoint(274, 218, 50));
-  track1.addPoint(new HistoryPoint(313, 236, 60));
+  track1.addPoint(new HistoryPoint(314, 214, 60));
   track1.addPoint(new HistoryPoint(383, 220, 70));
 
-  track2 = new Track(color(255, 0, 0), false);
-  track2.addPoint(new HistoryPoint(343, 240, 60));
-  track2.addPoint(new HistoryPoint(424, 242, 70));
-  track2.addPoint(new HistoryPoint(518, 231, 80));
-  track2.addPoint(new HistoryPoint(574, 229, 90));
+  track2 = new Track(color("#2c7bb6"), false);
+  track2.addPoint(new HistoryPoint(290, 234, 51));
+  track2.addPoint(new HistoryPoint(343, 240, 61));
+  track2.addPoint(new HistoryPoint(424, 242, 71));
+  track2.addPoint(new HistoryPoint(518, 231, 81));
+  track2.addPoint(new HistoryPoint(574, 229, 91));
   track2.addPoint(new HistoryPoint(613, 218, 100));
 
   track3 = new Track(color(255, 255, 255));
+}
+
+function drawLine(points) {
+  strokeWeight(1);
+  stroke("#ffff00");
+  for (var idx = 0; idx < points.length - 1; ++idx) {
+    var p1 = points[idx];
+    var p2 = points[idx + 1];
+
+    line(p1.x, p1.y, p2.x, p2.y);
+  }
 }
 
 function draw() {
@@ -99,6 +133,23 @@ function draw() {
   track1.update(t);
   track2.update(t);
 
-  track1.draw();
-  track2.draw();
+  var points1 = track1.draw();
+  var points2 = track2.draw();
+
+  if (isSliderPressed()) {
+    drawLine(points1.concat(points2));
+  }
+  else {
+    drawLine(points1);
+    drawLine(points2);
+  }
+}
+
+function mouseClicked() {
+  console.log(mouseX, mouseY);
+}
+
+function mousePressed() {
+  mouseLastPressedX = mouseX;
+  mouseLastPressedY = mouseY;
 }
