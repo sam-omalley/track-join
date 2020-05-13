@@ -100,12 +100,12 @@ function setup() {
   track1.addPoint(new HistoryPoint(383, 220, 70));
 
   track2 = new Track(color("#2c7bb6"), false);
-  track2.addPoint(new HistoryPoint(290, 234, 51));
-  track2.addPoint(new HistoryPoint(343, 240, 61));
-  track2.addPoint(new HistoryPoint(424, 242, 71));
-  track2.addPoint(new HistoryPoint(518, 231, 81));
-  track2.addPoint(new HistoryPoint(574, 229, 91));
-  track2.addPoint(new HistoryPoint(613, 218, 100));
+  track2.addPoint(new HistoryPoint(290, 234, 55));
+  track2.addPoint(new HistoryPoint(343, 240, 65));
+  track2.addPoint(new HistoryPoint(424, 242, 75));
+  track2.addPoint(new HistoryPoint(518, 231, 85));
+  track2.addPoint(new HistoryPoint(574, 229, 95));
+  track2.addPoint(new HistoryPoint(613, 218, 105));
 
   track3 = new Track(color(255, 255, 255));
 }
