@@ -1,6 +1,6 @@
 ## Demo
 
-[Link to Example](https://omalsa04.github.io/track-join/)
+[Link to Example](https://sam-omalley.github.io/track-join/)
 
 ## To run locally
 
